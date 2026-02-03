@@ -314,6 +314,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timerValue: 0
   maxTimer: 10
+  timerVisuals: {fileID: 667202792}
 --- !u!4 &919997290
 Transform:
   m_ObjectHideFlags: 0

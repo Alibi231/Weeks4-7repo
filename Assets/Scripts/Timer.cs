@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem.Controls;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class Timer : MonoBehaviour
 {
@@ -18,6 +18,7 @@ public class Timer : MonoBehaviour
     void Update()
     {
         timerValue += Time.deltaTime;
+        timerVisuals.value = timerValue;
 
         if (timerValue > maxTimer)
         {
