@@ -17,6 +17,8 @@ public class ParticleMovement : MonoBehaviour
     {
         // The speed of the particles are randomized to give the illusion of a snow/sand storm.
         speed = Random.Range(speedMin, speedMax);
+
+        // This assigns myTransform to the transform component of the object. This is so it can be referenced in the particleSpawnerScript.
         myTransform = transform.GetComponent<Transform>();
         
     }
@@ -29,6 +31,8 @@ public class ParticleMovement : MonoBehaviour
         newPos.x += speed * Time.deltaTime;
         newPos.y += fallSpeed * Time.deltaTime;
         transform.position = newPos;
+
+        //Rotates the object. This is used because this script is also used to rotate the snowflake, even if it is innefective on particles.
         Vector3 newRot = transform.eulerAngles;
         newRot.z += 10 * Time.deltaTime;
         transform.eulerAngles = newRot;

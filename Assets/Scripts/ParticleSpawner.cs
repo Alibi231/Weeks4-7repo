@@ -20,7 +20,7 @@ public class ParticleSpawner : MonoBehaviour
     //The number that will be multiplied by harshness to determine how many particles will spawn
     public int particleNumber;
 
-    //particle is made public so it can be assigned as a preset
+    //particle is made public so it can be assigned as a preset. The same goes for the raindrops and snowflakes below.
     public GameObject particle;
     public List<GameObject> particleList;
 
@@ -30,6 +30,7 @@ public class ParticleSpawner : MonoBehaviour
     public GameObject snowflake;
     public List<GameObject> snowflakeList;
 
+    //References to the harshnessSlider and the seasonText so they can be changed through the code, to meet assignment requirements. 
     public Slider harshnessSlider;
     public TextMeshProUGUI seasonText;
 
@@ -42,6 +43,8 @@ public class ParticleSpawner : MonoBehaviour
         raindropList = new List<GameObject>();
         snowflakeList = new List<GameObject>();
         seasonTimer = seasonLength;
+
+        //Season text is set to snow when the project starts, because the project will always be started with it snowing. 
         seasonText.text = "Snow";
 
 
@@ -61,26 +64,27 @@ public class ParticleSpawner : MonoBehaviour
     
         timeBetweenTimer -= Time.deltaTime;
 
+
+        // Once the timer reaches zero, a new wave of objects is spawned based on the current season.
         if (timeBetweenTimer < 0)
         {
+            // Resets the timer length.
             timeBetweenTimer = timeBetween;
 
             if (season == 1)
             {
+                // During the first season, the snow text is displayed, and a wave of particles are instantiated.
                 seasonText.text = "Snow";
                 for (int i = 0; i < particleNumber * harshnessSlider.value; i++)
                 {
                     GameObject newParticle = Instantiate(particle);
                     newParticle.transform.position = new Vector3(-10, Random.Range(yRangeMin, yRangeMax), 0);
 
+                    //Particles are sized using a getComponent reference, and is changed based on the harshness slider variable.
                     ParticleMovement size = newParticle.GetComponent<ParticleMovement>();
                     size.myTransform.localScale = new Vector3(harshnessSlider.value * 0.05f, harshnessSlider.value * 0.05f, harshnessSlider.value * 0.05f);
 
                     particleList.Add(newParticle);
-
-                    
-
-
 
                 }
 
@@ -94,6 +98,7 @@ public class ParticleSpawner : MonoBehaviour
 
             } else if (season == 2)
             {
+                // During the second season, the rain text is displayed, and a wave of raindrops are instantiated.
                 seasonText.text = "Rain";
                 for (int i = 0; i < particleNumber * harshnessSlider.value; i++)
                 {
@@ -106,6 +111,7 @@ public class ParticleSpawner : MonoBehaviour
 
             } else
             {
+                // During the first season, the sandstorm text is displayed, and a wave of particles are instantiated.
                 seasonText.text = "Sandstorm";
                 for (int i = 0; i < particleNumber * 2 * harshnessSlider.value; i++)
                 {
@@ -114,6 +120,7 @@ public class ParticleSpawner : MonoBehaviour
                     newParticle.GetComponent<Renderer>().material.color = Color.yellow;
                     particleList.Add(newParticle);
 
+                    //Particles are sized using a getComponent reference, and is changed based on the harshness slider variable.
                     ParticleMovement size = newParticle.GetComponent<ParticleMovement>();
                     size.myTransform.localScale = new Vector3(harshnessSlider.value * 0.05f, harshnessSlider.value * 0.05f, harshnessSlider.value * 0.05f);
 
@@ -129,9 +136,11 @@ public class ParticleSpawner : MonoBehaviour
 
     public void SeasonChange()
     {
+        // When the season changes, the season timer is reset, and the sliders value is set to a random number.
         harshnessSlider.value = Random.Range(0, 5);
         seasonTimer = seasonLength;
 
+        // When the season changes depending on the season, every gameObject in the list is destroyed, then the list is set to being empty.
         if (season == 1)
         {
             
@@ -174,6 +183,7 @@ public class ParticleSpawner : MonoBehaviour
 
         season++;
 
+        //If the season is out of bounds, it will be set to the initial season.
         if (season > 3)
         {
             season = 1;
