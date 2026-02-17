@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ParticleSpawner : MonoBehaviour
 {
@@ -22,13 +24,25 @@ public class ParticleSpawner : MonoBehaviour
     public GameObject particle;
     public List<GameObject> particleList;
 
+    public GameObject raindrop;
+    public List<GameObject> raindropList;
+
+    public GameObject snowflake;
+    public List<GameObject> snowflakeList;
+
+    public Slider harshnessSlider;
+    public TextMeshProUGUI seasonText;
+
     public int season; // 1 is Snow, 2 is Rain, 3 is Sandstorm
 
     void Start()
     {
         timeBetweenTimer = timeBetween;
         particleList = new List<GameObject>();
+        raindropList = new List<GameObject>();
+        snowflakeList = new List<GameObject>();
         seasonTimer = seasonLength;
+        seasonText.text = "Snow";
 
 
     }
@@ -50,30 +64,113 @@ public class ParticleSpawner : MonoBehaviour
         if (timeBetweenTimer < 0)
         {
             timeBetweenTimer = timeBetween;
-            for (int i = 0; i < particleNumber; i++)
+
+            if (season == 1)
             {
-                GameObject newParticle = Instantiate(particle);
-                newParticle.transform.position = new Vector3(-10, Random.Range(yRangeMin, yRangeMax), 0);
-                particleList.Add(newParticle);
+                seasonText.text = "Snow";
+                for (int i = 0; i < particleNumber * harshnessSlider.value; i++)
+                {
+                    GameObject newParticle = Instantiate(particle);
+                    newParticle.transform.position = new Vector3(-10, Random.Range(yRangeMin, yRangeMax), 0);
+
+                    ParticleMovement size = newParticle.GetComponent<ParticleMovement>();
+                    size.myTransform.localScale = new Vector3(harshnessSlider.value * 0.05f, harshnessSlider.value * 0.05f, harshnessSlider.value * 0.05f);
+
+                    particleList.Add(newParticle);
+
+                    
+
+
+
+                }
+
+                for (int i = 0; i < (particleNumber - 18) * harshnessSlider.value; i++)
+                {
+                    GameObject newSnowflake = Instantiate(snowflake);
+                    newSnowflake.transform.position = new Vector3(-10, Random.Range(yRangeMin, yRangeMax), 0);
+                    snowflakeList.Add(newSnowflake);
+
+                }
+
+            } else if (season == 2)
+            {
+                seasonText.text = "Rain";
+                for (int i = 0; i < particleNumber * harshnessSlider.value; i++)
+                {
+                    GameObject newRaindrop = Instantiate(raindrop);
+                    newRaindrop.transform.position = new Vector3(Random.Range(-12, 10), 8, 0);
+                    raindropList.Add(newRaindrop);
+
+                }
+
+
+            } else
+            {
+                seasonText.text = "Sandstorm";
+                for (int i = 0; i < particleNumber * 2 * harshnessSlider.value; i++)
+                {
+                    GameObject newParticle = Instantiate(particle);
+                    newParticle.transform.position = new Vector3(-10, Random.Range(yRangeMin, yRangeMax), 0);
+                    newParticle.GetComponent<Renderer>().material.color = Color.yellow;
+                    particleList.Add(newParticle);
+
+                    ParticleMovement size = newParticle.GetComponent<ParticleMovement>();
+                    size.myTransform.localScale = new Vector3(harshnessSlider.value * 0.05f, harshnessSlider.value * 0.05f, harshnessSlider.value * 0.05f);
+
+                }
 
             }
 
+            
+
         }
-
-
 
     }
 
     public void SeasonChange()
     {
+        harshnessSlider.value = Random.Range(0, 5);
         seasonTimer = seasonLength;
-        for (int i = 0; i < particleList.Count; i++)
+
+        if (season == 1)
         {
-            Destroy(particleList[i]);
+            
+            for (int i = 0; i < particleList.Count; i++)
+            {
+                Destroy(particleList[i]);
 
+            }
+
+            for (int i = 0; i < snowflakeList.Count; i++)
+            {
+                Destroy(snowflakeList[i]);
+
+            }
+
+            particleList = new List<GameObject>();
+            snowflakeList = new List<GameObject>();
         }
+        else if (season == 2)
+        {
+            
+            for (int i = 0; i < raindropList.Count; i++)
+            {
+                Destroy(raindropList[i]);
 
-        particleList = new List<GameObject>();
+            }
+
+            raindropList = new List<GameObject>();
+
+        } else
+        {
+            
+            for (int i = 0; i < particleList.Count; i++)
+            {
+                Destroy(particleList[i]);
+
+            }
+            particleList = new List<GameObject>();
+        }
 
         season++;
 
